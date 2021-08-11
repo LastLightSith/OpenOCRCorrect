@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent) :
     str.replace(",, ", "\n");
    // str.replace(", ","\t");
     ui->textEdit->setText(str);
+
+    initActions();
 }
 
 MainWindow::~MainWindow()
@@ -471,6 +473,46 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
 
 } */
 
+void MainWindow::initActions() {
+
+    m_makeBold.setText("Bold");
+    m_makeSup.setText("SuperScript");
+    m_makeSub.setText("SubScript");
+
+    connect(&m_makeBold, &QAction::triggered, this, [&] {
+        QTextCharFormat format;
+        if (ui->textBrowser->textCursor().charFormat().font().weight() == QFont::Bold ) {
+            format.setFontWeight(QFont::Normal);
+        } else {
+            format.setFontWeight(QFont::Bold);
+        }
+        ui->textBrowser->textCursor().mergeCharFormat(format);
+
+    });
+
+    connect(&m_makeSub, &QAction::triggered, this, [&] {
+        QTextCharFormat format;
+
+        if (ui->textBrowser->textCursor().charFormat().verticalAlignment() == QTextCharFormat::AlignSubScript) {
+            format.setVerticalAlignment(QTextCharFormat::AlignBaseline);
+        } else {
+            format.setVerticalAlignment(QTextCharFormat::AlignSubScript);
+        }
+        ui->textBrowser->textCursor().mergeCharFormat(format);
+    });
+
+    connect(&m_makeSup, &QAction::triggered, this, [&] {
+        QTextCharFormat format;
+        if (ui->textBrowser->textCursor().charFormat().verticalAlignment() == QTextCharFormat::AlignSuperScript) {
+            format.setVerticalAlignment(QTextCharFormat::AlignBaseline);
+        } else {
+            format.setVerticalAlignment(QTextCharFormat::AlignSuperScript);
+        }
+        ui->textBrowser->textCursor().mergeCharFormat(format);
+    });
+
+}
+
 
 
 bool RightclickFlag = 0;
@@ -597,7 +639,7 @@ void MainWindow::mousePressEvent(QMouseEvent *ev)
         //cout<<vecSugg1[bitarrayi].first<<endl;
         spell_menu->addAction(act);
         }
-        }
+    }
     /*Words =  print5NearestEntries(TDict,selectedStr);
     if (Words.size() > 0) {
         act = new QAction(QString::fromStdString(toDev(Words[0])), spell_menu);
@@ -605,6 +647,10 @@ void MainWindow::mousePressEvent(QMouseEvent *ev)
         spell_menu->addAction(act);
 
     }*/
+
+    popup_menu->addAction(&m_makeBold);
+    popup_menu->addAction(&m_makeSub);
+    popup_menu->addAction(&m_makeSup);
 
     popup_menu->insertSeparator(popup_menu->actions()[0]);
     popup_menu->insertMenu(popup_menu->actions()[0],spell_menu);

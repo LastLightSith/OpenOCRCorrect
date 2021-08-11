@@ -52,6 +52,12 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private:
+    QAction m_makeBold;
+    QAction m_makeSup;
+    QAction m_makeSub;
+
+    void initActions();
 
 public slots:
     //void textChangedSlot();
